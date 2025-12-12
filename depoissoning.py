@@ -17,28 +17,30 @@ def MSE(original, reconstructed):
 def MAE(original, reconstructed):
     return np.mean(np.abs(original - reconstructed))
 
-def add_poisson_noise(img, η):
-    noisy = np.random.poisson(img / η) * η
-    return np.clip(noisy, 0.0, 1.0)
+def add_poisson_noise(img, eta):
+    # img 0..1
+    scaled = img * eta
+    noisy = np.random.poisson(scaled)
+    return noisy / eta
 
 
 # ==============================
 # KATALOGI WYJŚCIOWE
 # ==============================
 
-os.makedirs("img/rozgrzewka", exist_ok=True)
-os.makedirs("img/zestawienia_bez_szumu", exist_ok=True)
-os.makedirs("img/zestawienia_z_szumem", exist_ok=True)
-os.makedirs("csv", exist_ok=True)
+# os.makedirs("img/rozgrzewka", exist_ok=True)
+# os.makedirs("img/zestawienia_bez_szumu", exist_ok=True)
+# os.makedirs("img/zestawienia_z_szumem", exist_ok=True)
+# os.makedirs("csv", exist_ok=True)
 
-csv_bez_szumu = open("csv/wyniki_bez_szumu.csv", "w", newline="", encoding="utf-8")
-csv_szum = open("csv/wyniki_z_szumem.csv", "w", newline="", encoding="utf-8")
+# csv_bez_szumu = open("csv/wyniki_bez_szumu.csv", "w", newline="", encoding="utf-8")
+# csv_szum = open("csv/wyniki_z_szumem.csv", "w", newline="", encoding="utf-8")
 
-writer_bez = csv.writer(csv_bez_szumu)
-writer_szum = csv.writer(csv_szum)
+# writer_bez = csv.writer(csv_bez_szumu)
+# writer_szum = csv.writer(csv_szum)
 
-writer_bez.writerow(["method", "K", "p", "MSE", "MAE"])
-writer_szum.writerow(["method", "eta", "K", "p", "MSE", "MAE"])
+# writer_bez.writerow(["method", "K", "p", "MSE", "MAE"])
+# writer_szum.writerow(["method", "eta", "K", "p", "MSE", "MAE"])
 
 
 # ==============================
@@ -64,7 +66,7 @@ for i, m in enumerate(methods):
     plt.title(m)
     plt.imshow(np.clip(out, 0, 1))
     plt.axis("off")
-    plt.savefig(f"img/rozgrzewka/{m}.png")
+ #   plt.savefig(f"img/rozgrzewka/{m}.png")
 plt.show()
 
 
@@ -100,14 +102,14 @@ for method in methods:
 
             print(f"{method}, K={K}, p={p}:  MSE={mse:.6f}, MAE={mae:.6f}")
 
-            writer_bez.writerow([method, K, p, mse, mae])
+       #     writer_bez.writerow([method, K, p, mse, mae])
 
             axes[i, j].imshow(img_back)
             axes[i, j].set_title(f"K={K}, p={p}\nMSE={mse:.4f}\nMAE={mae:.4f}")
             axes[i, j].axis("off")
 
     plt.tight_layout()
-    plt.savefig(f"img/zestawienia_bez_szumu/{method}.png")
+  #  plt.savefig(f"img/zestawienia_bez_szumu/{method}.png")
     plt.show()
 
 
@@ -145,14 +147,14 @@ for method in methods:
                     f"MSE={mse:.6f}, MAE={mae:.6f} | ZASZUMIONE"
                 )
 
-                writer_szum.writerow([method, η, K, p, mse, mae])
+            #    writer_szum.writerow([method, η, K, p, mse, mae])
 
                 axes[i, j].imshow(img_back)
                 axes[i, j].set_title(f"K={K}, p={p}\nMSE={mse:.4f}\nMAE={mae:.4f}")
                 axes[i, j].axis("off")
 
         plt.tight_layout()
-        plt.savefig(f"img/zestawienia_z_szumem/{method}_eta_{η}.png")
+    #    plt.savefig(f"img/zestawienia_z_szumem/{method}_eta_{η}.png")
         plt.show()
 
 
@@ -160,8 +162,8 @@ for method in methods:
 # ZAMKNIĘCIE PLIKÓW CSV
 # ==============================
 
-csv_bez_szumu.close()
-csv_szum.close()
+#csv_bez_szumu.close()
+#csv_szum.close()
 
 print("\n✅ Wyniki zapisane do:")
 print("csv/wyniki_bez_szumu.csv")
